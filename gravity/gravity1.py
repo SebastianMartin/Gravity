@@ -49,20 +49,19 @@ ax = plt.gca()
 
 Entities = []
 mIm = 1
-maxRange = 1000
+maxRange = 10
 ax.set_xlim([0, maxRange])
 ax.set_ylim([0, maxRange])
 
-for i in range(5000):
+for i in range(10):
 	x1 = random.uniform(0,maxRange)
 	y1 = random.uniform(0,maxRange)
 	#most tiny, barely any huge ones.
-	mass1 = round(1/random.uniform(0, 2),3)
+	mass1 = round(1/random.uniform(0, 5),3)
 	magnitude1 = [0,0]
-	initalMag = [0,0]#[1/random.uniform(-mIm, mIm),1//random.uniform(-mIm, mIm)]
+	initalMag = [0,0]#[random.uniform(-mIm, mIm),random.uniform(-mIm, mIm)]
 	newEntity = Entity(i,x1,y1,mass1,magnitude1,initalMag)
 	Entities.append(newEntity)
-
 
 for E in Entities:
 	E.currentMag = getCurrentMag(E,Entities)
@@ -72,7 +71,21 @@ for E in Entities:
 	ax.quiver(E.x,E.y,E.currentMag[0],E.currentMag[1], angles='xy', scale_units='xy',scale=1, width=.002,color='b')
 	circle = plt.Circle((E.x, E.y), E.radius,fill=False)#, color='y')
 	ax.add_artist(circle)
-
+for E in Entities:
+	x1 = E.x
+	y1 = E.y
+	mags = [0,0]
+	for E2 in Entities:
+		if E.name != E2.name:
+			x2 = E2.x
+			y2 = E2.y
+			distance = (((x2-x1)**2)+((y2-y1)**2))**.5
+			if distance < E.radius+E2.radius:
+				print(E.name,"\t",E2.name)
+				if(E.mass < E2.mass):
+					print("combine too: ",E2.name)
+				else:
+					print("combine too: ",E.name)
 
 
 
@@ -84,6 +97,6 @@ for o in Entities:
 	ys.append(o.y)
 	names.append(o.mass)
 plt.scatter(xs,ys,marker='.')
-#for i, txt in enumerate(names):
-#    ax.annotate(txt, (xs[i], ys[i]))
+for i, txt in enumerate(names):
+    ax.annotate(i, (xs[i], ys[i]))
 plt.show()
